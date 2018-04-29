@@ -26,6 +26,14 @@ class Filter:
         fast_align_total = []
         slow_roc_total = []
         fast_roc_total = []
+        swidth_pb = []
+        fwidth_pb = []
+        rwb = []        
+        slowk = []
+        slowd = []
+        slowk_roc = []
+        slowd_roc = []
+     
         for sym in symbols: 
             df = utils.read_analysis_file(sym)
             if df is None:
@@ -36,6 +44,13 @@ class Filter:
             slow_roc_total.append(df['slow_roc_total'][-1])
             fast_align_total.append(df['fast_align_total'][-1])
             fast_roc_total.append(df['fast_roc_total'][-1])
+            swidth_pb.append(df['swidth_pb'][-1])
+            fwidth_pb.append(df['fwidth_pb'][-1])
+            rwb.append(df['rwb'][-1])
+            slowk.append(df['slowk'][-1])
+            slowd.append(df['slowd'][-1])
+            slowk_roc.append(df['slowk_roc'][-1])
+            slowd_roc.append(df['slowd_roc'][-1])
 
         align_total_df = pd.DataFrame(index = symbols)
         align_total_df['name'] = names
@@ -43,9 +58,16 @@ class Filter:
         align_total_df['slow_roc_total'] = slow_roc_total
         align_total_df['fast_align_total'] = fast_align_total
         align_total_df['fast_roc_total'] = fast_roc_total
+        align_total_df['swidth_pb'] = swidth_pb
+        align_total_df['fwidth_pb'] = fwidth_pb
+        align_total_df['rwb'] = rwb
+        align_total_df['slowk'] = slowk
+        align_total_df['slowd'] = slowd
+        align_total_df['slowk_roc'] = slowk_roc
+        align_total_df['slowd_roc'] = slowd_roc
     
-        ret_df = align_total_df.sort_values(['slow_align_total', 'slow_roc_total', 'fast_align_total', 'fast_roc_total'], ascending=[False, False, False, False])
+        ret_df = align_total_df.sort_values(['slow_align_total', 'slow_roc_total', 'fast_align_total', 'fast_roc_total', 'swidth_pb'], ascending=[False, False, False, False, False])
 
-        ret_df.to_csv(RESULT_DIR + 'result_' + type + '.csv')
+        ret_df.to_csv(RESULT_DIR + 'basic_trend_' + type + '.csv')
 
         return ret_df

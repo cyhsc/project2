@@ -247,6 +247,20 @@ def get_url_soup_no_user_agent(url):
         print 'Failed to open', url, 'because of', e.reason
         return None
 
+def get_name_from_symbol_wsj(sym):
+    sym = sym.replace('-', '.')
+    url = 'http://quotes.wsj.com/' + sym
+    print url
+    soup = utils.get_url_soup_no_user_agent(url)
+    print '    Got soup for', sym
+    a1 = soup.body.find_all('span', attrs={'class': 'companyName'})
+    if a1 == None:
+        print 'Cannot find quote for symbol', sym
+        return ''
+    name = a1[0].contents[0]
+
+    return name
+
 ##############################################################################################
 #
 # Misc
