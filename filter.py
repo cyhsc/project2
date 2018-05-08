@@ -29,10 +29,7 @@ class Filter:
         swidth_pb = []
         fwidth_pb = []
         rwb = []        
-        slowk = []
-        slowd = []
-        slowk_roc = []
-        slowd_roc = []
+        macd_hist_pb = []
      
         for sym in symbols: 
             df = utils.read_analysis_file(sym)
@@ -47,10 +44,7 @@ class Filter:
             swidth_pb.append(df['swidth_pb'][-1])
             fwidth_pb.append(df['fwidth_pb'][-1])
             rwb.append(df['rwb'][-1])
-            slowk.append(df['slowk'][-1])
-            slowd.append(df['slowd'][-1])
-            slowk_roc.append(df['slowk_roc'][-1])
-            slowd_roc.append(df['slowd_roc'][-1])
+            macd_hist_pb.append(df['macd_hist_pb'][-1])
 
         align_total_df = pd.DataFrame(index = symbols)
         align_total_df['name'] = names
@@ -61,10 +55,7 @@ class Filter:
         align_total_df['swidth_pb'] = swidth_pb
         align_total_df['fwidth_pb'] = fwidth_pb
         align_total_df['rwb'] = rwb
-        align_total_df['slowk'] = slowk
-        align_total_df['slowd'] = slowd
-        align_total_df['slowk_roc'] = slowk_roc
-        align_total_df['slowd_roc'] = slowd_roc
+        align_total_df['macd_hist_pb'] = macd_hist_pb
     
         ret_df = align_total_df.sort_values(['slow_align_total', 'slow_roc_total', 'fast_align_total', 'fast_roc_total', 'swidth_pb'], ascending=[False, False, False, False, False])
 
