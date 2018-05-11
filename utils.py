@@ -63,6 +63,29 @@ def current_date_str():
 def previous_date_str(n):
     return (datetime.date.today() - datetime.timedelta(n)).strftime('%Y-%m-%d')
 
+#--------------------------------------------------------------------------
+# Calculate latest date string in the quote
+#--------------------------------------------------------------------------
+def latest_date_str():
+    hour, minute, second = utils.current_time()
+    weekday = utils.current_weekday()
+    if weekday.lower() == 'sunday':
+        latest_date = utils.previous_date_str(2)
+    elif weekday.lower() == 'saturday':
+        latest_date = utils.previous_date_str(1)
+    elif weekday.lower() == 'monday':
+        if int(hour) < 16:
+            latest_date = utils.previous_date_str(3)
+        else:
+            latest_date = utils.current_date_str()
+    else:
+        if int(hour) < 16:
+            latest_date = utils.previous_date_str(1)
+        else:
+            latest_date = utils.current_date_str()
+
+    return latest_date
+
 ##############################################################################################
 #
 #    File Handling functions
