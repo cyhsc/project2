@@ -87,3 +87,6 @@ class Quote:
         else:
             return None, already_up_to_date
 
+    def intraday(self, sym):
+        av = AlphaVantage()
+        df = av.full_quotes_intraday(sym)
