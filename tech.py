@@ -14,7 +14,7 @@ ma_periods = config.MA_PERIODS
 
 class TechData:
 
-    def __init__(self, ref_sym = 'spy'):
+    def __init__(self, ref_sym = 'SPY'):
         self.ref_sym = ref_sym
 
     #-------------------------------------------------------------------
@@ -129,6 +129,12 @@ class TechData:
     #   Assuming base_data contains more bars than data
     #-------------------------------------------------------------------
     def relative(self, data, base_data):
+
+        if data.index[-1] != base_data.index[-1]:        
+            print 'No relative calculation because last index not equal'
+            print '- data last index is', data.index[-1], ' and base last index is', base_data.index[-1]
+            return
+
         closes = data['close']
         r_closes = closes[::-1]
         base_closes = base_data['close']
