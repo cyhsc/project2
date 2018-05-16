@@ -90,3 +90,4 @@ class Quote:
     def intraday(self, sym):
         av = AlphaVantage()
         df = av.full_quotes_intraday(sym)
+        return df
