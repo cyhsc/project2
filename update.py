@@ -50,14 +50,18 @@ def update_quotes(symbols):
     q = Quote()
     latest_date = utils.latest_date_str()
     for sym in symbols:
-        latest_date, already_up_to_date = q.update(sym, latest_date)
+        new_latest_date, already_up_to_date = q.update(sym, latest_date)
+
+        if new_latest_date > latest_date:
+            latest_date = new_latest_date
+
         if already_up_to_date is False:
             i = i + 1
             time.sleep(2)
 
         if i % 6 == 0: 
             print '..... i =', i, ', sleep longer'
-            time.sleep(30)
+            time.sleep(10)
             i = 1
 
 def update_tech_data(symbols):
