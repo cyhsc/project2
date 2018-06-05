@@ -16,9 +16,19 @@ status_file = RESULT_DIR + 'status.csv'
 #--------------------------------------------------------------------------
 #   Check up the stock
 #--------------------------------------------------------------------------
-def checkup(sym_list):
+def checkup(symbols):
 
     print 'Checking up ......'
+
+    latest_date = utils.latest_date_str()
+    q = Quote()
+    td = TechData()
+    a = Analysis()
+
+    for sym in symbols: 
+        q.update(sym, latest_date)    
+        td.update(sym)
+        a.update(sym)
 
 # ==============================================================================
 #   Main
@@ -43,11 +53,11 @@ def main(argv):
         elif opt in ('-s'): 
             sym = arg
             print 'sym =', sym
-            sym_list.append(sym)
+            sym_list.append(sym.upper())
         elif opt in ('-l'):
             tmp = arg.split(',')
             for item in tmp:
-                sym_list.append(item.strip())
+                sym_list.append(item.strip().upper())
 
     print 'sym_list =', sym_list
     if sym_list:
