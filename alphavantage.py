@@ -1,3 +1,7 @@
+################################################################################################################################ 
+# https://github.com/RomelTorres/alpha_vantage
+################################################################################################################################ 
+
 import os
 import sys
 import time
@@ -36,6 +40,18 @@ class AlphaVantage:
 
     def full_quotes_intraday(self, sym):
         df, m = self.ts.get_intraday(sym, interval='30min', outputsize='full')
+        df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
+        df = df[['open', 'high', 'low', 'close', 'volume']]
+        return df
+
+    def quotes_weekly(self, sym):
+        df, m = self.ts.get_weekly(sym)
+        df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
+        df = df[['open', 'high', 'low', 'close', 'volume']]
+        return df
+
+    def quotes_monthly(self, sym):
+        df, m = self.ts.get_monthly(sym)
         df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
         df = df[['open', 'high', 'low', 'close', 'volume']]
         return df
