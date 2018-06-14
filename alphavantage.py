@@ -22,36 +22,42 @@ class AlphaVantage:
 
     def compact_quotes(self, sym):
         df, m = self.ts.get_daily(sym, outputsize='compact')   
-        df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
-        df = df[['open', 'high', 'low', 'close', 'volume']] 
+        if df is not None:
+            df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
+            df = df[['open', 'high', 'low', 'close', 'volume']] 
         return df
 
     def full_quotes(self, sym):
         df, m = self.ts.get_daily(sym, outputsize='full')   
-        df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
-        df = df[['open', 'high', 'low', 'close', 'volume']] 
+        if df is not None:
+            df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
+            df = df[['open', 'high', 'low', 'close', 'volume']] 
         return df
 
     def compact_quotes_intraday(self, sym):
         df, m = self.ts.get_intraday(sym, interval='30min', outputsize='compact')
-        df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
-        df = df[['open', 'high', 'low', 'close', 'volume']]
+        if df is not None:
+            df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
+            df = df[['open', 'high', 'low', 'close', 'volume']]
         return df
 
     def full_quotes_intraday(self, sym):
         df, m = self.ts.get_intraday(sym, interval='30min', outputsize='full')
-        df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
-        df = df[['open', 'high', 'low', 'close', 'volume']]
+        if df is not None:
+            df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
+            df = df[['open', 'high', 'low', 'close', 'volume']]
         return df
 
     def quotes_weekly(self, sym):
         df, m = self.ts.get_weekly(sym)
-        df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
-        df = df[['open', 'high', 'low', 'close', 'volume']]
+        if df is not None:
+            df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
+            df = df[['open', 'high', 'low', 'close', 'volume']]
         return df
 
     def quotes_monthly(self, sym):
         df, m = self.ts.get_monthly(sym)
-        df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
-        df = df[['open', 'high', 'low', 'close', 'volume']]
+        if df is not None:
+            df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
+            df = df[['open', 'high', 'low', 'close', 'volume']]
         return df
