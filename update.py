@@ -57,12 +57,12 @@ def update_quotes(symbols):
 
         if already_up_to_date is False:
             i = i + 1
-            time.sleep(2)
+            #time.sleep(1)
 
-        if i % 6 == 0: 
-            print '..... i =', i, ', sleep longer'
-            time.sleep(10)
-            i = 1
+        #if i % 5 == 0: 
+        #    print '..... i =', i, ', sleep longer'
+        #    time.sleep(10)
+        #    i = 1
 
 def update_tech_data(symbols):
     print 'Updating technical data .....'

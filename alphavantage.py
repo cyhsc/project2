@@ -21,42 +21,72 @@ class AlphaVantage:
         self.ts = TimeSeries(key=self.key, retries=5, output_format='pandas', indexing_type='date')
 
     def compact_quotes(self, sym):
-        df, m = self.ts.get_daily(sym, outputsize='compact')   
+        try: 
+            df, m = self.ts.get_daily(sym, outputsize='compact')   
+        except:
+            print 'Compact quote get caused exception'
+            return None
+
         if df is not None:
             df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
             df = df[['open', 'high', 'low', 'close', 'volume']] 
         return df
 
     def full_quotes(self, sym):
-        df, m = self.ts.get_daily(sym, outputsize='full')   
+        try: 
+            df, m = self.ts.get_daily(sym, outputsize='full')   
+        except:
+            print 'Full quote get caused exception'
+            return None
+
         if df is not None:
             df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
             df = df[['open', 'high', 'low', 'close', 'volume']] 
         return df
 
     def compact_quotes_intraday(self, sym):
-        df, m = self.ts.get_intraday(sym, interval='30min', outputsize='compact')
+        try: 
+            df, m = self.ts.get_intraday(sym, interval='30min', outputsize='compact')
+        except:
+            print 'Compact quote intraday get caused exception'
+            return None
+
         if df is not None:
             df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
             df = df[['open', 'high', 'low', 'close', 'volume']]
         return df
 
     def full_quotes_intraday(self, sym):
-        df, m = self.ts.get_intraday(sym, interval='30min', outputsize='full')
+        try: 
+            df, m = self.ts.get_intraday(sym, interval='30min', outputsize='full')
+        except:
+            print 'Full quote intraday get caused exception'
+            return None
+
         if df is not None:
             df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
             df = df[['open', 'high', 'low', 'close', 'volume']]
         return df
 
     def quotes_weekly(self, sym):
-        df, m = self.ts.get_weekly(sym)
+        try: 
+            df, m = self.ts.get_weekly(sym)
+        except:
+            print 'Weekly quote get caused exception'
+            return None
+
         if df is not None:
             df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
             df = df[['open', 'high', 'low', 'close', 'volume']]
         return df
 
     def quotes_monthly(self, sym):
-        df, m = self.ts.get_monthly(sym)
+        try: 
+            df, m = self.ts.get_monthly(sym)
+        except:
+            print 'Weekly quote get caused exception'
+            return None
+
         if df is not None:
             df = df.rename(columns = {'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'})
             df = df[['open', 'high', 'low', 'close', 'volume']]

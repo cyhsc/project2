@@ -56,10 +56,15 @@ class Quote:
 
             if latest_date is None or df.index[-1] < latest_date:
                 print 'Donot know latest date or latest date in file not up to date'
-                new_df = self.get_quotes_alphavantage(sym, True)
+                new_df = None
+                sleep_seconds = 10
+                while new_df is None:
+                    new_df = self.get_quotes_alphavantage(sym, True)
 
-                if new_df is None: 
-                    return None, already_up_to_date
+                    if new_df is None: 
+                        #sleep_seconds = sleep_seconds + 5
+                        print 'Cannot get quote for', sym, 'through AlphaVantage, sleep for', sleep_seconds, ' seconds and retry.'
+                        time.sleep(sleep_seconds)
 
                 print 'Got quote for symbol:', sym, ', Last index =', new_df.index[-1]
 
