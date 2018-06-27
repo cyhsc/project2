@@ -94,5 +94,11 @@ class Quote:
 
     def intraday(self, sym):
         av = AlphaVantage()
-        df = av.full_quotes_intraday(sym)
+        df = None
+        sleep_seconds = 10
+        while df is None:
+            df = av.full_quotes_intraday(sym)
+            if df is None:
+                print 'Cannot get quote for', sym, 'through AlphaVantage, sleep for', sleep_seconds, ' seconds and retry.'
+                time.sleep(sleep_seconds)
         return df
