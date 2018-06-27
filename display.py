@@ -14,21 +14,21 @@ RESULT_DIR = config.RESULT_DIR
 def basic_trend():
     print '=============================================  ETF  ==================================================='
     df = pd.read_csv(RESULT_DIR + 'basic_trend_etf.csv', index_col = 0)
-    temp_df = df[(df.swidth_pb > 1) & (df.rwb >= 0) & (df.fwidth_pb >= 1)]
+    temp_df = df[(df.swidth_pb >= 1) & (df.rwb >= 0) & (df.fwidth_pb >= 1)]
     print temp_df
     print '=============================================  STOCK ==================================================='
     df = pd.read_csv(RESULT_DIR + 'basic_trend_stock.csv', index_col = 0)
-    temp_df = df[(df.swidth_pb > 1) & (df.rwb >= 0) & (df.fwidth_pb >= 1)]
+    temp_df = df[(df.swidth_pb >= 1) & (df.rwb >= 0) & (df.fwidth_pb >= 1)]
     print temp_df
 
 def basic_trend_emerging():
     print '=============================================  ETF  ==================================================='
     df = pd.read_csv(RESULT_DIR + 'basic_trend_etf.csv', index_col = 0)
-    temp_df = df[((df.macd_hist_pb == 1) | (df.fwidth_pb == 1)) & (df.swidth_pb > 1) & (df.rwb >= 0)]
+    temp_df = df[((df.macd_hist_pb == 1) | (df.fwidth_pb == 1)) & (df.swidth_pb >= 1) & (df.rwb >= 0)]
     print temp_df
     print '=============================================  STOCK ==================================================='
     df = pd.read_csv(RESULT_DIR + 'basic_trend_stock.csv', index_col = 0)
-    temp_df = df[((df.macd_hist_pb == 1) | (df.fwidth_pb == 1)) & (df.swidth_pb > 1) & (df.rwb >= 0)]
+    temp_df = df[((df.macd_hist_pb == 1) | (df.fwidth_pb == 1)) & (df.swidth_pb >= 1) & (df.rwb >= 0)]
     print temp_df
 
 def column_names():
