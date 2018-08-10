@@ -246,6 +246,17 @@ def relative_rank(data_series):
 # Internet fectching related functions 
 #
 ##############################################################################################
+def get_url(url):
+    try:
+        #print url
+        req = urllib2.Request(url)
+        data = urllib2.urlopen(req).read()
+        return data
+
+    except urllib2.URLError as e:
+        print 'Failed to open', url, 'because of', e.reason
+        return None
+
 def get_url_soup(url):
     try:
         #print url
