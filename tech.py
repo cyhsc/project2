@@ -175,6 +175,8 @@ class TechData:
         data['slowd'] = slowd
         data['slowk_roc'] = utils.roc(data['slowk'])
         data['slowd_roc'] = utils.roc(data['slowd'])
+        data['diff_slow_kd'] = slowk - slowd
+        data['diff_slow_kd_pb'] = utils.positive_bars(data['diff_slow_kd'])
 
     #-------------------------------------------------------------------
     #   Calculate Renko chart
