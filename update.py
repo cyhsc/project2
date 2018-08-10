@@ -80,6 +80,7 @@ def update_filters():
     f = Filter()
     f.basic_trend('etf')
     f.basic_trend('stock')
+    f.three_percent('stock')
 
 #--------------------------------------------------------------------------
 #   Update everything in database
