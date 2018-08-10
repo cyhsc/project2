@@ -11,37 +11,61 @@ DATA_DIR = config.DATA_DIR
 ANALYSIS_DIR = config.ANALYSIS_DIR
 RESULT_DIR = config.RESULT_DIR
 
-def basic_trend():
-    print '=============================================  ETF  ==================================================='
-    df = pd.read_csv(RESULT_DIR + 'basic_trend_etf.csv', index_col = 0)
-    temp_df = df[(df.swidth_pb >= 1) & (df.rwb >= 0) & (df.fwidth_pb >= 1)]
-    print temp_df
-    print '=============================================  STOCK ==================================================='
-    df = pd.read_csv(RESULT_DIR + 'basic_trend_stock.csv', index_col = 0)
-    temp_df = df[(df.swidth_pb >= 1) & (df.rwb >= 0) & (df.fwidth_pb >= 1)]
-    print temp_df
+def basic_trend(type):
+    if type == 'etf': 
+        print '=============================================  ETF  ==================================================='
+        filename = 'basic_trend_etf.csv'
+    else:
+        print '=============================================  STOCK ==================================================='
+        filename = 'basic_trend_stock.csv'
 
-def basic_trend_emerging():
-    print '=============================================  ETF  ==================================================='
-    df = pd.read_csv(RESULT_DIR + 'basic_trend_etf.csv', index_col = 0)
+    df = pd.read_csv(RESULT_DIR + filename, index_col = 0)
+    temp_df = df[(df.swidth_pb >= 1) & (df.rwb >= 0) & (df.fwidth_pb >= 1)]
+    print temp_df[['name', 'slow_align_total', 'slow_roc_total', 'rwb', 'swidth_pb', 'fwidth_pb', 'macd_hist_pb', 'swidth_roc_pb', 'diff_slow_kd_pb', 'slowk', 'slowd']]
+
+def basic_trend_emerging(type):
+    if type == 'etf': 
+        print '=============================================  ETF  ==================================================='
+        filename = 'basic_trend_etf.csv'
+    else:
+        print '=============================================  STOCK ==================================================='
+        filename = 'basic_trend_stock.csv'
+        
+    df = pd.read_csv(RESULT_DIR + filename, index_col = 0)
     temp_df = df[((df.macd_hist_pb == 1) | (df.fwidth_pb == 1)) & (df.swidth_pb >= 1) & (df.rwb >= 0)]
-    print temp_df
-    print '=============================================  STOCK ==================================================='
-    df = pd.read_csv(RESULT_DIR + 'basic_trend_stock.csv', index_col = 0)
-    temp_df = df[((df.macd_hist_pb == 1) | (df.fwidth_pb == 1)) & (df.swidth_pb >= 1) & (df.rwb >= 0)]
-    print temp_df
+    print temp_df[['name', 'slow_align_total', 'slow_roc_total', 'rwb', 'swidth_pb', 'fwidth_pb', 'macd_hist_pb', 'swidth_roc_pb', 'diff_slow_kd_pb', 'slowk', 'slowd']]
+
+def basic_trend_stoch_cross(type):
+    if type == 'etf': 
+        print '=============================================  ETF  ==================================================='
+        filename = 'basic_trend_etf.csv'
+    else:
+        print '=============================================  STOCK ==================================================='
+        filename = 'basic_trend_stock.csv'
+
+    df = pd.read_csv(RESULT_DIR + filename, index_col = 0)
+    temp_df = df[(df.diff_slow_kd_pb == 1) & ((df.slowk < 50) | (df.slowd < 50)) & (df.swidth_pb >= 1) & (df.rwb >= 0) & (df.fwidth_pb >= 1)]
+    print temp_df[['name', 'slow_align_total', 'slow_roc_total', 'rwb', 'swidth_pb', 'fwidth_pb', 'macd_hist_pb', 'swidth_roc_pb', 'diff_slow_kd_pb', 'slowk', 'slowd']]
 
 def column_names():
     df = pd.read_csv(ANALYSIS_DIR + 'SPY_analysis.csv', index_col = 0)
     print df.columns.values.tolist()
 
-def show_one_stock(sym, col):
+def show_one_stock(sym, col, rows):
     print sym, col
+    print type(rows)
+    r = int(rows)
     df = pd.read_csv(ANALYSIS_DIR + sym + '_analysis.csv', index_col = 0)
     if col == []:
-        print df
+        if r != 0:
+            print df[-r:]
+        else:
+            print df
     else:
-        print df[col]
+        if r != 0:
+            print df[col][-r:]
+        else:
+            print df[col]
 
 # ==============================================================================
 #   Main
@@ -64,13 +88,14 @@ def main(argv):
     #  Parse the command line option
     # ---------------------------------------------------------------------
     try:
-        opts, args = getopt.getopt(argv,"hns:c:")
+        opts, args = getopt.getopt(argv,"hns:c:r:")
     except getopt.GetoptError:
         print 'display.py '
         sys.exit(2)
 
     sym = None
     col = []
+    rows = 0
 
     for opt, arg in opts:
         if opt == '-h':
@@ -83,18 +108,27 @@ def main(argv):
             sym = arg
         elif opt in ('-c'):
             col = arg.split(',')
+        elif opt in ('-r'):
+            rows = arg
 
     if sym is not None:
-        show_one_stock(sym.upper(), col)
+        show_one_stock(sym.upper(), col, rows)
         sys.exit(2)
 
     print '\n###################################################     Emerging     ######################################################\n'
 
-    basic_trend_emerging()
+    basic_trend_emerging('etf')
+    basic_trend_emerging('stock')
+
+    print '\n###################################################     Stoch Cross     ######################################################\n'
+
+    basic_trend_stoch_cross('etf')
+    basic_trend_stoch_cross('stock')
 
     print '\n###################################################       All        ######################################################\n'
 
-    basic_trend()
+    basic_trend('etf')
+    basic_trend('stock')
 
 if __name__ == '__main__':
     main(sys.argv[1:])
