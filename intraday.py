@@ -29,6 +29,7 @@ def checkup(symbols):
     swidth_pb = []
     fwidth = []
     fwidth_pb = []
+    fwidth_roc_pb = []
     rwb = []
     macd_hist_pb = []
     swidth_roc_pb = []
@@ -49,7 +50,7 @@ def checkup(symbols):
         a.guppy_alignment(df)
         a.guppy_roc(df)
 
-        tmp_df = df[['swidth', 'swidth_pb', 'fwidth', 'fwidth_pb', 'rwb', 'macd_hist_pb', 'swidth_roc_pb']]
+        tmp_df = df[['swidth', 'swidth_pb', 'fwidth', 'fwidth_pb', 'fwidth_roc_pb', 'rwb', 'macd_hist_pb', 'swidth_roc_pb']]
         print '++++++++', sym, '+++++++++'
         print tmp_df.tail(5)
 
@@ -57,6 +58,7 @@ def checkup(symbols):
         swidth_pb.append(df['swidth_pb'][-1])
         fwidth.append(df['fwidth'][-1])
         fwidth_pb.append(df['fwidth_pb'][-1])
+        fwidth_roc_pb.append(df['fwidth_roc_pb'][-1])
         rwb.append(df['rwb'][-1])
         macd_hist_pb.append(df['macd_hist_pb'][-1])
         swidth_roc_pb.append(df['swidth_roc_pb'][-1])
@@ -66,6 +68,7 @@ def checkup(symbols):
     total_df['swidth_pb'] = swidth_pb
     total_df['fwidth'] = fwidth
     total_df['fwidth_pb'] = fwidth_pb
+    total_df['fwidth_roc_pb'] = fwidth_roc_pb
     total_df['rwb'] = rwb
     total_df['macd_hist_pb'] = macd_hist_pb
     total_df['swidth_roc_pb'] = swidth_roc_pb
