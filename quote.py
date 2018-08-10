@@ -5,6 +5,7 @@ import pandas as pd
 import json
 import config
 from alphavantage import AlphaVantage
+from iex import IEX
 
 DATA_DIR = config.DATA_DIR
 CONFIG_DIR = config.CONFIG_DIR
@@ -43,6 +44,13 @@ class Quote:
         else:
             return av.full_quotes(sym)
 
+    def get_quotes_iex(self, sym, compact = True):
+        iex = IEX()
+        if compact is True: 
+            return iex.compact_quotes(sym)
+        else:
+            return iex.full_quotes(sym)
+
     def update(self, sym, latest_date = None, lookback = DEFAULT_LOOKBACK):
 
         print 'Updating quote for', sym, '.....' 
@@ -59,7 +67,9 @@ class Quote:
                 new_df = None
                 sleep_seconds = 10
                 while new_df is None:
-                    new_df = self.get_quotes_alphavantage(sym, True)
+                    new_df = self.get_quotes_iex(sym, True)
+                    if new_df is None:
+                        new_df = self.get_quotes_alphavantage(sym, True)
 
                     if new_df is None: 
                         #sleep_seconds = sleep_seconds + 5
@@ -82,7 +92,9 @@ class Quote:
                 print 'Quote data already up to date'
         else:
             print 'Quote file for', sym, 'doesnot exist'
-            df = self.get_quotes_alphavantage(sym, False)
+            df = self.get_quotes_iex(sym, False)
+            if df is None:
+                df = self.get_quotes_alphavantage(sym, False)
             print 'Got quote for symbol:', sym, ', Last index =', df.index[-1]
 
         if df is not None:
