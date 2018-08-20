@@ -73,12 +73,16 @@ class TechData:
         fwidth = []
         swidth = []
         rwb = []
+	sband_min = []
+        sband_max = []
 
         for index, row in data.iterrows():
             fast = [row['ema3'], row['ema5'], row['ema7'], row['ema10'], row['ema12'], row['ema15']]
             slow = [row['ema30'], row['ema35'], row['ema40'], row['ema45'], row['ema50'], row['ema60']]
             fmin, fmax = utils.minmax(fast)
             smin, smax = utils.minmax(slow)
+            sband_min.append(smin)
+            sband_max.append(smax)
 
             if row['ema3'] > row['ema15']:
                 fwidth.append(fmax - fmin)
@@ -103,6 +107,8 @@ class TechData:
         data['fwidth_roc_pb'] = utils.positive_bars(data['fwidth_roc'])
         data['fwidth_ranking'] = utils.relative_rank(data['fwidth'])
         data['swidth'] = swidth
+        data['sband_min'] = sband_min
+        data['sband_max'] = sband_max
         data['swidth_pb'] = utils.positive_bars(data['swidth'])
         data['swidth_roc'] = utils.roc(swidth)
         data['swidth_roc_pb'] = utils.positive_bars(data['swidth_roc'])
