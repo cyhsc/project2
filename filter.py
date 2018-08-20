@@ -1,3 +1,4 @@
+import sys
 import pandas as pd
 import numpy as np
 import config
@@ -132,7 +133,8 @@ class Filter:
             change = (100*(float(closes[-1]) - float(closes[-2])))/float(closes[-2])
             vchange = (100*(float(volumes[-1]) - float(vol_sma50[-1])))/float(vol_sma50[-1])
             swidth = df['swidth']
-            if (change >= 3) and (vchange >= 150) and (swidth[-1] > 0): 
+            sband_max = df['sband_max']
+            if (change >= 3) and (vchange >= 150) and (swidth[-1] > 0) and (closes[-1] > sband_max[-1]): 
                 tp_symbols.append(sym)
                 tp_changes.append(change)
                 tp_vchanges.append(vchange)
@@ -144,3 +146,64 @@ class Filter:
         tp_df.to_csv(RESULT_DIR + 'three_percent_' + type + '.csv')
 
         return tp_df
+
+    def three_percent_track(self, type): 
+        
+        #--------------------------------------------------------------------------------
+        # Read in new three percent stocks
+        #--------------------------------------------------------------------------------
+        lines = open(RESULT_DIR + 'three_percent_' + type + '.csv').read().split('\n')
+        new_three_percent = []
+        for line in lines[1:]:
+            if len(line) > 0: 
+                new_three_percent.append(line.split(',')[0])
+                
+        #--------------------------------------------------------------------------------
+        # Read in three percent tracker 
+        #--------------------------------------------------------------------------------
+        lines = open(RESULT_DIR + 'three_percent_tracker.csv').read().split('\n')
+        track = {}
+        for line in lines:
+            if len(line) > 0:
+                items = line.split(',')
+                sym = items[0]
+                dates = []
+                for item in items[1:]:
+                    dates.append(item)
+                track[sym] = dates
+
+        #--------------------------------------------------------------------------------
+        # Add new stocks to tracker 
+        #--------------------------------------------------------------------------------
+        for sym in new_three_percent: 
+            df = utils.read_analysis_file(sym)
+            latest_date = df.index[-1]
+            if sym not in track:
+                track[sym] = [latest_date]
+            else:
+                dates = track[sym]
+                if latest_date not in dates:
+                    dates.append(latest_date)
+
+        #--------------------------------------------------------------------------------
+        # Write back to track file
+        #--------------------------------------------------------------------------------
+        f = open(RESULT_DIR + 'three_percent_tracker.csv', 'w')
+        for key in track:
+            line = key
+            for item in track[key]:
+                line = line + ',' + item
+            print line
+            f.write(line + '\n')
+        f.close()
+
+# ==============================================================================
+#   Main
+# ==============================================================================
+def main(argv):
+
+    f = Filter()
+    f.three_percent('stock')
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
