@@ -5,7 +5,9 @@ import json
 import pandas as pd
 from dateutil import parser
 import utils
+import config
 
+DATA_DIR = config.DATA_DIR
 API_BASE = 'https://api.iextrading.com/1.0/'
 API_BASE_STOCK = API_BASE + 'stock/'
 
@@ -86,16 +88,42 @@ class IEX:
     def compact_quotes(self, sym):
         return self.historical_quotes(sym, True)
 
+    def batch_quotes(self, symlist):
+        quotes = {}
+        symbols = ''
+        count = 0
+        num_sym = len(symlist)
+        for sym in symlist:
+            symbols = symbols + sym + ','
+            count = count + 1
+            if count == 100:
+                url = API_BASE_STOCK + 'market/batch?symbols=' + symbols + '&types=quote'    
+                data = utils.get_url(url)
+                jdata = json.loads(data)
+                symbols = ''
+                count = 0
+                for key in jdata:
+                    entry = jdata[key]['quote']
+                    quote = [entry['open'], entry['high'], entry['low'], entry['close'], entry['latestVolume']]
+                    quotes[key] = quote
+    
+        if symbols != '': 
+            url = API_BASE_STOCK + 'market/batch?symbols=' + symbols + '&types=quote'    
+            data = utils.get_url(url)
+            jdata = json.loads(data)
+            for key in jdata:
+                entry = jdata[key]['quote']
+                quote = [entry['open'], entry['high'], entry['low'], entry['close'], entry['latestVolume']]
+                quotes[key] = quote
+
+        return quotes
+
 # ==============================================================================
 #   Main
 # ==============================================================================
 def main(argv):
 
-    sym = 'AAPL'
     iex = IEX()
-    df = iex.compact_quotes(sym)
-
-    print df
 
 if __name__ == '__main__':
     main(sys.argv[1:])
