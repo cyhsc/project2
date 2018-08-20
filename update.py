@@ -2,6 +2,7 @@ import sys
 import getopt
 import time
 from datetime import datetime
+import pandas as pd
 import csv
 import config
 import utils
@@ -9,7 +10,9 @@ from quote import Quote
 from tech import TechData
 from analysis import Analysis
 from filter import Filter
+from iex import IEX
 
+DATA_DIR = config.DATA_DIR
 RESULT_DIR = config.RESULT_DIR
 status_file = RESULT_DIR + 'status.csv'
 
@@ -57,12 +60,34 @@ def update_quotes(symbols):
 
         if already_up_to_date is False:
             i = i + 1
-            #time.sleep(1)
 
-        #if i % 5 == 0: 
-        #    print '..... i =', i, ', sleep longer'
-        #    time.sleep(10)
-        #    i = 1
+def update_quotes_batch(symbols):
+
+    iex = IEX()
+    date, temp_open, temp_high, temp_low, temp_close, temp_volume = iex.quote('SPY')
+    print 'Latest date string is', date
+    quotes = iex.batch_quotes(symbols)
+    for key in quotes:
+        print key, quotes[key]
+        sym = key
+        df = utils.read_quote_file(sym)
+        if date not in df.index:
+            open = float(quotes[key][0])
+            high = float(quotes[key][1])
+            low = float(quotes[key][2])
+            close = float(quotes[key][3])
+            volume = int(quotes[key][4])
+            row = pd.Series({'open':open,'high':high,'low':low,'close':close,'volume':volume},name=date)
+            df = df.append(row)
+            df.to_csv(DATA_DIR + sym + '.csv')
+
+def update_quotes_bulk():
+
+    symbol_files = ['symbols_etf.csv', 'symbols_stock.csv']
+    for f in symbol_files:
+        print '-----------------------', 'Updating data for symbols in', f, '-----------------------'
+        symbols, names = utils.read_symbol_file(f)
+        update_quotes_batch(symbols)
 
 def update_tech_data(symbols):
     print 'Updating technical data .....'
@@ -81,6 +106,7 @@ def update_filters():
     f.basic_trend('etf')
     f.basic_trend('stock')
     f.three_percent('stock')
+    f.three_percent_track('stock')
 
 #--------------------------------------------------------------------------
 #   Update everything in database
@@ -144,7 +170,7 @@ def main(argv):
     #  Parse the command line option 
     # --------------------------------------------------------------------- 
     try:
-        opts, args = getopt.getopt(argv,"hs:l:")
+        opts, args = getopt.getopt(argv,"hbs:l:")
     except getopt.GetoptError:
         print 'task.py -s <symbol>'
         sys.exit(2)
@@ -154,6 +180,10 @@ def main(argv):
     for opt, arg in opts: 
         if opt == '-h':
             print 'task.py -s csco -l \'intc, msft\''
+            sys.exit(2)
+        elif opt == '-b':
+            print 'Bulk updating ...'
+            update_quotes_bulk()
             sys.exit(2)
         elif opt in ('-s'): 
             sym = arg
